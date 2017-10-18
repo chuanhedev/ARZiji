@@ -55,12 +55,12 @@ namespace Guanyin
 		private List<Direction> histories = new List<Direction> ();
 		private DelayCall delayCall = new DelayCall ();
 		private DelayCall inputDelayCall = new DelayCall ();
-		private DelayCall falunDelayCall = new DelayCall ();
+		//private DelayCall falunDelayCall = new DelayCall ();
 		private bool guanyinMoving = false;
 		private Tweener tweener;
 		public InputField inputField;
 		public GameObject canvas;
-		public GameObject falun;
+		//public GameObject falun;
 		private Camera ARCamera;
 		public GameObject enterNameObj;
 		//private ISceneComponent enterNameScroll;
@@ -72,7 +72,7 @@ namespace Guanyin
 		private List<Fu> fus = new List<Fu> ();
 		public List<Texture> fuTexs;
 		private Dictionary<string, ISceneComponent> sceneComponents = new Dictionary<string, ISceneComponent> ();
-		public GameObject dizuo;
+		//public GameObject dizuo;
 		private float guanyinScale;
 		private Quaternion guanyinRotation;
 		public Light headLight;
@@ -122,9 +122,9 @@ namespace Guanyin
 			startGyroY = Camera.main.transform.localRotation.eulerAngles.y;
 			raysContainer.SetActive (false);
 			//sceneComponents.Add("scroll", new Scroll (enterNameObj));
-			sceneComponents.Add ("falun", new Falun (falun));
+			//sceneComponents.Add ("falun", new Falun (falun));
 			sceneComponents.Add ("sparkle", new Sparkle (sparkle));
-			dizuo.transform.localScale = Vector3.one * .001f;
+			//dizuo.transform.localScale = Vector3.one * .001f;
 			headLight.enabled = false;
 			//qifuPanel.SetActive (false);
 			GetRandomFu ();
@@ -253,9 +253,9 @@ namespace Guanyin
 				guanyin.transform.DOLocalRotate (new Vector3 (0, 180, 0), 5f).SetEase (Ease.OutQuad);
 			});
 
-			delayCall.Call (2f, () => {
-				dizuo.transform.DOScale (Vector3.one, 2f).SetEase (Ease.OutQuart);
-			});
+//			delayCall.Call (2f, () => {
+//				dizuo.transform.DOScale (Vector3.one, 2f).SetEase (Ease.OutQuart);
+//			});
 //		inputDelayCall.Call(9f, ()=>{
 //			canvas.SetActive (true);
 //		});
@@ -373,7 +373,7 @@ namespace Guanyin
 //				fuContainer = new GameObject ("FuContainer");
 //				fuContainer.transform.SetParent (ARCamera.gameObject.transform, false);
 //			}
-				sceneComponents ["falun"].Play ();
+				//sceneComponents ["falun"].Play ();
 				raysContainer.SetActive (true);
 				qifuPanel.SetActive (true);
 				fuPanel.SetActive (false);
