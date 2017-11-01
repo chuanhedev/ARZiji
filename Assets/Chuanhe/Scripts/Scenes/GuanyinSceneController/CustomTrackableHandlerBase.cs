@@ -10,141 +10,155 @@ using System.Collections;
 using System.Collections.Generic;
 using Vuforia;
 
-namespace Guanyin{
-/// <summary>
-/// A custom handler that implements the ITrackableEventHandler interface.
-/// </summary>
-public class CustomTrackableHandlerBase : MonoBehaviour,
-	ITrackableEventHandler
+namespace Guanyin
 {
-	#region PRIVATE_MEMBER_VARIABLES
-
-	private TrackableBehaviour mTrackableBehaviour;
-	//public bool tracked;
-	//private GameObject quad;
-	//public bool tracked;
-	//public int sphereIndex;
-
-	#endregion // PRIVATE_MEMBER_VARIABLES
-
-
-
-	#region UNTIY_MONOBEHAVIOUR_METHODS
-
-	public virtual void Start ()
-	{
-		mTrackableBehaviour = GetComponent<TrackableBehaviour> ();
-		if (mTrackableBehaviour) {
-			mTrackableBehaviour.RegisterTrackableEventHandler (this);
-		}
-	}
-
-	#endregion // UNTIY_MONOBEHAVIOUR_METHODS
-
-
-
-	#region PUBLIC_METHODS
-
 	/// <summary>
-	/// Implementation of the ITrackableEventHandler function called when the
-	/// tracking state changes.
+	/// A custom handler that implements the ITrackableEventHandler interface.
 	/// </summary>
-	public virtual void OnTrackableStateChanged (
-		TrackableBehaviour.Status previousStatus,
-		TrackableBehaviour.Status newStatus)
+	public class CustomTrackableHandlerBase : MonoBehaviour,
+	ITrackableEventHandler
 	{
-		if (newStatus == TrackableBehaviour.Status.DETECTED ||
-		     newStatus == TrackableBehaviour.Status.TRACKED ||
-		     newStatus == TrackableBehaviour.Status.EXTENDED_TRACKED) {
-			OnTrackingFound ();
-		} else {
-			OnTrackingLost ();
-		}
-	}
+		#region PRIVATE_MEMBER_VARIABLES
 
-	#endregion // PUBLIC_METHODS
+		private TrackableBehaviour mTrackableBehaviour;
+		//public bool tracked;
+		//private GameObject quad;
+		//public bool tracked;
+		//public int sphereIndex;
 
+		#endregion // PRIVATE_MEMBER_VARIABLES
 
 
-	#region PRIVATE_METHODS
 
-	private void OnTrackingFoundDefault()
-	{
-		Renderer[] rendererComponents = GetComponentsInChildren<Renderer>(true);
-		Collider[] colliderComponents = GetComponentsInChildren<Collider>(true);
+		#region UNTIY_MONOBEHAVIOUR_METHODS
 
-		// Enable rendering:
-		foreach (Renderer component in rendererComponents)
+		public virtual void Start ()
 		{
-			component.enabled = true;
+			mTrackableBehaviour = GetComponent<TrackableBehaviour> ();
+			if (mTrackableBehaviour) {
+				mTrackableBehaviour.RegisterTrackableEventHandler (this);
+			}
 		}
 
-		// Enable colliders:
-		foreach (Collider component in colliderComponents)
+		#endregion // UNTIY_MONOBEHAVIOUR_METHODS
+
+
+
+		#region PUBLIC_METHODS
+
+		/// <summary>
+		/// Implementation of the ITrackableEventHandler function called when the
+		/// tracking state changes.
+		/// </summary>
+		public virtual void OnTrackableStateChanged (
+			TrackableBehaviour.Status previousStatus,
+			TrackableBehaviour.Status newStatus)
 		{
-			component.enabled = true;
+			if (newStatus == TrackableBehaviour.Status.DETECTED ||
+			   newStatus == TrackableBehaviour.Status.TRACKED ||
+			   newStatus == TrackableBehaviour.Status.EXTENDED_TRACKED) {
+				OnTrackingFound ();
+			} else {
+				OnTrackingLost ();
+			}
 		}
 
-		Debug.Log("Trackable " + mTrackableBehaviour.TrackableName + " found");
-	}
+		#endregion // PUBLIC_METHODS
 
 
-	private void OnTrackingLostDefault()
-	{
-		Renderer[] rendererComponents = GetComponentsInChildren<Renderer>(true);
-		Collider[] colliderComponents = GetComponentsInChildren<Collider>(true);
 
-		// Disable rendering:
-		foreach (Renderer component in rendererComponents)
+		#region PRIVATE_METHODS
+
+		private void OnTrackingFoundDefault ()
 		{
-			component.enabled = false;
+			Renderer[] rendererComponents = GetComponentsInChildren<Renderer> (true);
+			Collider[] colliderComponents = GetComponentsInChildren<Collider> (true);
+
+			// Enable rendering:
+			foreach (Renderer component in rendererComponents) {
+				component.enabled = true;
+			}
+
+			// Enable colliders:
+			foreach (Collider component in colliderComponents) {
+				component.enabled = true;
+			}
+
+			Debug.Log ("Trackable " + mTrackableBehaviour.TrackableName + " found");
 		}
 
-		// Disable colliders:
-		foreach (Collider component in colliderComponents)
+
+		private void OnTrackingLostDefault ()
 		{
-			component.enabled = false;
+			Renderer[] rendererComponents = GetComponentsInChildren<Renderer> (true);
+			Collider[] colliderComponents = GetComponentsInChildren<Collider> (true);
+
+			// Disable rendering:
+			foreach (Renderer component in rendererComponents) {
+				component.enabled = false;
+			}
+
+			// Disable colliders:
+			foreach (Collider component in colliderComponents) {
+				component.enabled = false;
+			}
+
+			Debug.Log ("Trackable " + mTrackableBehaviour.TrackableName + " lost");
 		}
 
-		Debug.Log("Trackable " + mTrackableBehaviour.TrackableName + " lost");
-	}
 
+//		public virtual void TrackingFoundSuccess ()
+//		{
+//		
+//			Light[] lights = GetComponentsInChildren<Light> (true);
+//			for (int i = 0; i < lights.Length; i++)
+//				lights [i].gameObject.SetActive (true);
+//			ScanSceneController.instant.PlayAnimation ();
+//		}
 
-	public virtual void TrackingFoundSuccess(){
-		
-		Light[] lights = GetComponentsInChildren<Light> (true);
-		for (int i = 0; i < lights.Length; i++)
-			lights [i].gameObject.SetActive (true);
-		ScanSceneController.instant.PlayAnimation ();
-	}
+		private void OnTrackingFound ()
+		{
+			//if (SceneController.instant.state == SceneState.VRFullScreen)
+			//	return;
+			if (ScanSceneController.instant.playing) {
+				if (ScanSceneController.instant.state == ScanSceneState.AnimationAfterName) {
+					ScanSceneController.instant.guanyinContainer.transform.SetParent(transform, false);
+				}
+				return;
+			}
+			//OnTrackingFoundDefault();
+			for (int i = 0; i < transform.childCount; i++) {
+				transform.GetChild (i).gameObject.SetActive (true);
+			}
+			ScanSceneController.currentTrackableObject = this.gameObject;
+			ScanSceneController.instant.PlayAnimation ();
+		}
 
-	private void OnTrackingFound ()
-	{
-		//if (SceneController.instant.state == SceneState.VRFullScreen)
-		//	return;
-		if(ScanSceneController.instant.playing)return;
-		OnTrackingFoundDefault();
-		ScanSceneController.currentTrackableObject = this.gameObject;
-		TrackingFoundSuccess ();
-	}
+//		public virtual void TrackingLostSuccess ()
+//		{
+//			Light[] lights = GetComponentsInChildren<Light> ();
+//			foreach (Light l in lights)
+//				l.gameObject.SetActive (false);
+//			ScanSceneController.instant.Reset ();
+//		}
 
-	public virtual void TrackingLostSuccess(){
-		Light[] lights = GetComponentsInChildren<Light> ();
-		foreach (Light l in lights)
-			l.gameObject.SetActive (false);
-		ScanSceneController.instant.Reset ();
-	}
+		private void OnTrackingLost ()
+		{
+			if (ScanSceneController.instant.playing) {
+				if (ScanSceneController.instant.state == ScanSceneState.AnimationAfterName) {
+					ScanSceneController.instant.guanyinContainer.transform.SetParent(ScanSceneController.instant.cameraObjectContainer.transform, false);
+				}
+				return;
+			}
+			for (int i = 0; i < transform.childCount; i++) {
+				transform.GetChild (i).gameObject.SetActive (false);
+			}
+			ScanSceneController.currentTrackableObject = null;
+			ScanSceneController.instant.Reset ();
+		}
 
-	private void OnTrackingLost ()
-	{
-		if(ScanSceneController.instant.playing)return;
-		OnTrackingLostDefault ();
-		ScanSceneController.currentTrackableObject = null;
-		TrackingLostSuccess ();
-	}
-
-	public virtual void Update ()
-	{
+		public virtual void Update ()
+		{
 //		if (!(SceneController.instant.state == SceneState.VR))
 //			return;
 //		if (Input.GetMouseButtonDown (0)) {
@@ -162,9 +176,9 @@ public class CustomTrackableHandlerBase : MonoBehaviour,
 //			//Debug.Log ((ray.direction.normalized * 0.5f).x.ToString() + " " + (ray.direction.normalized * 0.5f).y.ToString() + " " + (ray.direction.normalized * 0.5f).z.ToString() ) ;
 //
 //		}
-	}
+		}
 
-	#endregion // PRIVATE_METHODS
+		#endregion // PRIVATE_METHODS
 	}
 }
 

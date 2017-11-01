@@ -41,6 +41,7 @@ namespace Guanyin
 		public float cloudSpeed = 1f;
 		private bool cloudMoving = false;
 		public GameObject guanyin;
+		public GameObject guanyinContainer;
 		public bool playing;
 		public GameObject raysContainer;
 
@@ -60,14 +61,15 @@ namespace Guanyin
 		private Tweener tweener;
 		public InputField inputField;
 		public GameObject canvas;
-		//public GameObject falun;
-		private Camera ARCamera;
+		public GameObject falun;
+		[HideInInspector]
+		public Camera ARCamera;
 		public GameObject enterNameObj;
 		//private ISceneComponent enterNameScroll;
 		public GameObject namePanel;
 		public GameObject fuPanel;
 		//private bool enterNameMoving = false;
-		private ScanSceneState state;
+		public ScanSceneState state;
 		private GameObject fuContainer;
 		private List<Fu> fus = new List<Fu> ();
 		public List<Texture> fuTexs;
@@ -95,6 +97,16 @@ namespace Guanyin
 		private GameObject infoPanel;
 		[HideInInspector]
 		public string sceneName = "item1";
+		public Animator guanyinAnimator;
+		private float audioVolume;
+		public GameObject qifuButton;
+		private ScreenTouch screenTouch;
+		[HideInInspector]
+		public GameObject cameraObjectContainer;
+		private Transform headPosition;
+		private Transform headLightObj;
+		private float origGuanyinScale;
+		private float guanyinTouchedScale;
 
 		void Awake ()
 		{
@@ -107,11 +119,17 @@ namespace Guanyin
 			guanyinScale = guanyin.transform.localScale.x;
 			guanyinRotation = guanyin.transform.localRotation;
 			guanyinCloud = guanyin.GetChildByNameInChildren ("Cloud_GuanYin");
+			headPosition = guanyin.GetChildByNameInChildren ("HeadPosition").transform;
+			headLightObj = guanyin.GetChildByNameInChildren ("HeadLight").transform;
 			scanner = canvas.GetChildByName ("Scanner");
 			btnBack = canvas.GetChildByName ("BtnBack");
 			btnInfo = canvas.GetChildByName ("BtnInfo");
 			infoPanel = canvas.GetChildByName ("InfoPanel");
-
+			origGuanyinScale = guanyin.transform.localScale.x;
+			screenTouch = gameObject.GetComponent<ScreenTouch> ();
+			screenTouch.onDoubleTouchBegin = ()=>guanyinTouchedScale = guanyin.transform.localScale.x;
+			guanyinContainer = guanyin.transform.parent.gameObject;
+			cameraObjectContainer = ARCamera.gameObject.transform.parent.gameObject.GetChildByName("ObjectContainer");
 //		dizuoPosition = dizuo.transform.localPosition;
 //		if (SystemInfo.supportsGyroscope) {
 //			Input.gyro.enabled = true;
@@ -122,7 +140,7 @@ namespace Guanyin
 			startGyroY = Camera.main.transform.localRotation.eulerAngles.y;
 			raysContainer.SetActive (false);
 			//sceneComponents.Add("scroll", new Scroll (enterNameObj));
-			//sceneComponents.Add ("falun", new Falun (falun));
+			sceneComponents.Add ("falun", new Falun (falun));
 			sceneComponents.Add ("sparkle", new Sparkle (sparkle));
 			//dizuo.transform.localScale = Vector3.one * .001f;
 			headLight.enabled = false;
@@ -174,7 +192,7 @@ namespace Guanyin
 			guanyin.transform.localScale = Vector3.one * 3;
 			guanyin.transform.localRotation = Quaternion.Euler (0, 90, 0);
 			qifuPanel.SetActive (false);
-
+			qifuButton.SetActive (false);
 
 			for (int i = fus.Count - 1; i >= 0; i--) {
 				Destroy (fus [i].gameObject);
@@ -264,12 +282,12 @@ namespace Guanyin
 //			falun.transform.DOLocalMove(  ARCamera.gameObject.transform.InverseTransformPoint(ARCamera.gameObject.transform.forward) * .1f, 5f).SetEase(Ease.OutQuad);
 //		});
 
-			delayCall.Call (9f, () => {
-				namePanel.SetActive (true);
+			delayCall.Call (8f, () => {
+				qifuButton.SetActive (true);
 				//enterNameMoving = true;
 				//state = ScanSceneState.ShowScroll;
 				//sceneComponents["scroll"].Play();
-				UpdateState (ScanSceneState.EnterName);
+				//
 			});
 			cloudMoving = true;
 		}
@@ -348,34 +366,38 @@ namespace Guanyin
 				qifuPanel.SetActive (false);
 				fuPanel.SetActive (true);
 				int year = DateTime.Now.Year;
-				Text yTxt = fuPanel.GetChildByNameInChildren ("Year").GetComponent<Text> ();
-				Text yTxt2 = fuPanel.GetChildByNameInChildren ("Year2").GetComponent<Text> ();
-				if (year == 2018) {
-					yTxt.text = "二零一八";
-					yTxt2.text = "戊戌年";
-				} else if (year == 2019) {
-					yTxt.text = "二零一九";
-					yTxt2.text = "己亥年";
-				} else {
-					yTxt.text = "二零一七";
-					yTxt2.text = "丁酉年";
-				}
+				//Text yTxt = fuPanel.GetChildByNameInChildren ("Year").GetComponent<Text> ();
+				//Text yTxt2 = fuPanel.GetChildByNameInChildren ("Year2").GetComponent<Text> ();
+				GameObject yearObj = fuPanel.GetChildByNameInChildren ("YearImg");
+				yearObj.ShowChildByName (year.ToString ());
+//				if (year == 2018) {
+//					yTxt.text = "二零一八";
+//					yTxt2.text = "戊戌年";
+//				} else if (year == 2019) {
+//					yTxt.text = "二零一九";
+//					yTxt2.text = "己亥年";
+//				} else {
+//					yTxt.text = "二零一七";
+//					yTxt2.text = "丁酉年";
+//				}
 				GetRandomFu ();
 
 			} else if (s == ScanSceneState.EnterName) {
 				//sceneComponents["scroll"].Reset();
+				qifuButton.SetActive(false);
 				namePanel.SetActive (true);
+				namePanel.GetComponent<Scroll> ().Play ();
 				inputField.Select ();
 				inputField.ActivateInputField ();
 			} else if (s == ScanSceneState.AnimationAfterName) {
 				namePanel.SetActive (false);
-//			if (fuContainer == null) {
-//				fuContainer = new GameObject ("FuContainer");
-//				fuContainer.transform.SetParent (ARCamera.gameObject.transform, false);
-//			}
-				//sceneComponents ["falun"].Play ();
+				guanyinAnimator.Play ("Play");
+				sceneComponents ["falun"].Play ();
 				raysContainer.SetActive (true);
-				qifuPanel.SetActive (true);
+				delayCall.Call (3f, () => {
+					qifuPanel.SetActive (true);
+					qifuPanel.GetComponent<Scroll> ().Play ();
+				});
 				fuPanel.SetActive (false);
 				//delayCall.Call (10f, ()=>UpdateState (ScanSceneState.FuShown));
 				qifuText.text = inputField.text;
@@ -384,11 +406,14 @@ namespace Guanyin
 				if (!audio.isPlaying) {
 					audio.Play ();
 					audio.volume = 0;
+					audioVolume = -.2f;
 				}
 			}
 		}
 
-
+		public void OnQifuButtonClick(){
+			UpdateState (ScanSceneState.EnterName);
+		}
 
 		public void OnBackClicked ()
 		{
@@ -436,15 +461,17 @@ namespace Guanyin
 				//Debug.Log (guanyinMoveTime.ToString());
 				Vector3 v3 = guanyinPath.GetPoint (EaseCurve.OneMinusCos (Mathf.Min (1, guanyinMoveTime)));
 				//v3 = guanyin.transform.parent.InverseTransformPoint (v3);
-				Debug.Log (guanyinMoveTime.ToString () + " " + v3.x.ToString () + " " + v3.y + " " + v3.z);
+				//Debug.Log (guanyinMoveTime.ToString () + " " + v3.x.ToString () + " " + v3.y + " " + v3.z);
 				guanyin.transform.position = v3;//guanyinPath.GetPoint (Mathf.Max(1, Time.deltaTime / guanyinMoveTime));
 			} else if (state == ScanSceneState.AnimationAfterName) {
 				AudioSource audio = GetAudioSource ();
-				if (audio.volume < 1) {
-					audio.volume += 0.0013f;
-				} else {
-					audio.volume = 1;
-				}
+				audioVolume += 0.001f;
+				audio.volume = Mathf.Clamp (audioVolume, 0, 1);
+//				if (audio.volume < 1) {
+//					audio.volume += 0.0013f;
+//				} else {
+//					audio.volume = 1;
+//				}
 			}
 //		if (state == ScanSceneState.AnimationAfterName || state == ScanSceneState.FuShown) {
 //			if (Time.frameCount % 10 == 0) {
@@ -459,7 +486,30 @@ namespace Guanyin
 //					i++;
 //				}
 //			}
-//		}
+//		}	
+			if (state == ScanSceneState.AnimationAfterName) {
+				headLightObj.position = headPosition.position + ARCamera.gameObject.transform.forward * .1f;
+				if (screenTouch.doubleTouched) {
+					float doubleDisChanged = screenTouch.doubleTouchChangedDis / screenTouch.doubleTouchedDis + 1f;
+					Logger.Log (doubleDisChanged + " " + guanyin.transform.localScale.x);
+					if (doubleDisChanged > 1.2f || doubleDisChanged < .8f) {
+						//float scale = guanyin.transform.localScale.x;
+						//scale += (doubleDisChanged > 1.2f ? (doubleDisChanged - 1.2f) : (doubleDisChanged - .8f)) * 2f;
+						//scale = Mathf.Clamp (scale, origGuanyinScale / 3, origGuanyinScale * 3);
+						guanyin.transform.localScale = Vector3.one * guanyinTouchedScale * (doubleDisChanged > 1.2f ? (doubleDisChanged - .2f) : (doubleDisChanged + .2f));
+					} else {
+						guanyin.transform.localPosition = guanyin.transform.localPosition.SetX (guanyin.transform.localPosition.x + screenTouch.doubleTouchDeltaX * .005f);
+						guanyin.transform.localPosition = guanyin.transform.localPosition.SetY (guanyin.transform.localPosition.y + screenTouch.doubleTouchDeltaY * .005f);
+					}
+				}
+				if (Input.touchCount == 1 && Input.GetTouch (0).phase == TouchPhase.Moved) {
+					Touch touch = Input.GetTouch (0);
+					float y =  Mathf.Clamp(guanyin.transform.localRotation.eulerAngles.y + touch.deltaPosition.y * -1.8f, 130, 230);
+					Vector3 angle = guanyin.transform.localRotation.eulerAngles.SetY (y);
+					guanyin.transform.localRotation = Quaternion.Euler(angle);
+				}
+			}
+
 			delayCall.Update ();
 			//inputDelayCall.Update ();
 			//Vector3 cameraDir = Camera.main.transform.forward;
