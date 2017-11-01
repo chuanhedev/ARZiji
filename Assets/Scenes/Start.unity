@@ -1213,10 +1213,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10d67fe8eb84d86468aebefda0a1d506, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverVersion: 1.0.0
-  version: 1.0.0
+  serverVersion: 1.1.0
+  version: 1.1.0
   prodRemoteUrl: http://www.iyoovr.com/ziji
-  devRemoteUrl: http://192.168.1.104:8080/web/yiliao/data/ziji
+  devRemoteUrl: http://192.168.1.139:8080/web/yiliao/data/ziji
   language: cn
   enablePopupVideo: 1
   message: {fileID: 1104783844}

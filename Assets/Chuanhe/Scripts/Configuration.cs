@@ -38,6 +38,8 @@ public class Configuration : MonoBehaviour {
 	public static bool initialized = false;
 	private GameObject loadingPanel;
 	private GameObject loadingImage;
+	[HideInInspector]
+	public string sceneName;
 
 	// Use this for initialization
 	//	void Start () {
@@ -118,7 +120,7 @@ public class Configuration : MonoBehaviour {
 	public void OnScanClick(){
 		//SceneManager.LoadScene ("Guanyin");
 		loadingPanel.SetActive(true);
-		loadSceneAsync = SceneManager.LoadSceneAsync("Guanyin");
+		loadSceneAsync = SceneManager.LoadSceneAsync(sceneName);
 		loadingNextScene = true;
 	}
 
