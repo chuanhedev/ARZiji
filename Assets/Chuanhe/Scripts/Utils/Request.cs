@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.IO;
 using UnityEngine.UI;
+using Nuke;
 
 public class Request
 {
@@ -42,7 +43,7 @@ public class Request
 	{
 		string url = RemoteUrl + "/" + str;
 		Logger.Log ("loading " + url);
-		WWW www = new WWW (Utils.ApplyRandomVersion (url));
+		WWW www = new WWW (Nuke.Utils.ApplyRandomVersion (url));
 		current = www;
 		yield return www;
 		if (!String.IsNullOrEmpty (www.error)) {
@@ -103,7 +104,7 @@ public class Request
 	public static IEnumerator DownloadFile (string src, string dest, bool absolute = false, Action<float> progressHandler = null)
 	{
 		//
-		src = absolute ? src : Utils.ApplyRandomVersion (RemoteUrl + "/" + src);
+		src = absolute ? src : Nuke.Utils.ApplyRandomVersion (RemoteUrl + "/" + src);
 		Logger.Log ("Downloading " + src + " to " + dest);
 		WWW www = new WWW (src);
 		current = www;

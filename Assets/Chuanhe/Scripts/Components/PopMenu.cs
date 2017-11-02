@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using Vuforia;
+using Nuke;
 
 public class PopMenu : MonoBehaviour {
 
@@ -18,7 +19,7 @@ public class PopMenu : MonoBehaviour {
 		for (int i = 0; i < menuItems.Count; i++) {
 			menuItems [i].gameObject.SetActive (false);
 		}
-		List<int> idxes = Utils.RandomIntArray (4);
+		List<int> idxes = Nuke.Utils.RandomIntArray (4);
 		for (int j = 0; j < menuItems.Count; j++) {
 			int i = idxes [j];
 			if (showing) {
