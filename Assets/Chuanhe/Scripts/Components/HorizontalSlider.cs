@@ -43,6 +43,7 @@ public class HorizontalSlider : MonoBehaviour
 			obj.transform.SetParent (transform, false);
 		}
 		enabled = true;
+		Select (0);
 	}
 
 	public void SliderBeginDrag(){
@@ -69,6 +70,12 @@ public class HorizontalSlider : MonoBehaviour
 		if (origIdx != index && onIndexChanged != null)
 			onIndexChanged.Invoke (index);
 		Debug.Log (transform.localPosition.x + " " + startTransformX  + " " + index + " SliderEndDrag");
+	}
+
+	public void Select(int idx){
+		index = idx;
+		if (onIndexChanged != null)
+			onIndexChanged.Invoke (index);
 	}
 
 	public void SliderDrag(){
