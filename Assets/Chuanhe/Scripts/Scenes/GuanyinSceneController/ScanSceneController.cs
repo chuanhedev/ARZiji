@@ -387,10 +387,12 @@ namespace Guanyin
 				qifuButton.SetActive(false);
 				namePanel.SetActive (true);
 				namePanel.GetComponent<Scroll> ().Play ();
-				inputField.Select ();
+				Invoke ("SelectInputField", 1);
+				//inputField.Select ();
 				inputField.ActivateInputField ();
 			} else if (s == ScanSceneState.AnimationAfterName) {
 				namePanel.SetActive (false);
+				btnBack.SetActive (true);
 				guanyinAnimator.Play ("Play");
 				sceneComponents ["falun"].Play ();
 				raysContainer.SetActive (true);
@@ -409,6 +411,10 @@ namespace Guanyin
 					audioVolume = -.2f;
 				}
 			}
+		}
+
+		public void SelectInputField(){
+			inputField.Select ();
 		}
 
 		public void OnQifuButtonClick(){

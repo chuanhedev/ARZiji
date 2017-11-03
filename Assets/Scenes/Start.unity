@@ -320,7 +320,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u4EAC\u676D\u5927\u8FD0\u6CB3 \xB7 \u676D\u5DDE\u6BB5"
+  m_Text: 
 --- !u!222 &236348098
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -550,7 +550,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u8FD9\u662F\u4E00\u6761\u5386\u65F62500\u5E74\u4ECD\u7E41\u5FD9\u7684\u5546\u9053\uFF0C\u8FD9\u662F\u4E00\u6761\u627F\u8F7D\u4E86\u51E0\u671D\u4EBA\u6587\u5386\u53F2\u7684\u5927\u6CB3\u3002"
+  m_Text: 
 --- !u!222 &480922841
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1216,7 +1216,7 @@ MonoBehaviour:
   serverVersion: 1.1.0
   version: 1.1.0
   prodRemoteUrl: http://www.iyoovr.com/ziji
-  devRemoteUrl: http://192.168.1.139:8080/web/yiliao/data/ziji
+  devRemoteUrl: http://192.168.1.175:8080/web/yiliao/data/ziji
   language: cn
   enablePopupVideo: 1
   message: {fileID: 1104783844}
@@ -1225,6 +1225,7 @@ MonoBehaviour:
   uiGrey: {r: 0, g: 0, b: 0, a: 0}
   bg: {fileID: 0}
   slider: {fileID: 0}
+  sceneName: 
 --- !u!4 &1160516839
 Transform:
   m_ObjectHideFlags: 0
@@ -2125,7 +2126,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u8FD0\u6CB3\u5370\u8C61"
+  m_Text: 
 --- !u!222 &2018076673
 CanvasRenderer:
   m_ObjectHideFlags: 0

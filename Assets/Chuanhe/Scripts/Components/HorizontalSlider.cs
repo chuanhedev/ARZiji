@@ -59,7 +59,7 @@ public class HorizontalSlider : MonoBehaviour
 		//int itemIdx = Mathf.FloorToInt ((portion + 1) / 2);
 		//GetComponent<Transform>().D
 		int origIdx = index;
-		float flipDistance = 200;
+		float flipDistance = 100;
 		if (transform.localPosition.x - startTransformX > flipDistance) {
 			index = Mathf.Max (index - 1, 0);
 		}else if (transform.localPosition.x - startTransformX < -flipDistance) {

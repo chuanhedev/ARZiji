@@ -17,3 +17,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Guanyin.unity
     guid: f361a8a5490b28a40b51e59dfb6d7036
+  - enabled: 1
+    path: Assets/Scenes/Leifengta.unity
+    guid: 49ddbed97fb114a958408963b0499610

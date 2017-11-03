@@ -15,6 +15,7 @@
 /Assets/StreamingAssets*
 /Assets/Resources*
 /Assets/Prefabs*
+/Assets/UnityARKitPlugin*
 /bin/
 /bindebug/
 *.mp4*

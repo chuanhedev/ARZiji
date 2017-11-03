@@ -121,9 +121,9 @@ namespace Guanyin
 			//if (SceneController.instant.state == SceneState.VRFullScreen)
 			//	return;
 			if (ScanSceneController.instant.playing) {
-				if (ScanSceneController.instant.state == ScanSceneState.AnimationAfterName) {
-					ScanSceneController.instant.guanyinContainer.transform.SetParent(transform, false);
-				}
+				//if (ScanSceneController.instant.state == ScanSceneState.AnimationAfterName) {
+				ScanSceneController.instant.guanyinContainer.transform.SetParent(transform, false);
+				//}
 				return;
 			}
 			//OnTrackingFoundDefault();
@@ -145,9 +145,9 @@ namespace Guanyin
 		private void OnTrackingLost ()
 		{
 			if (ScanSceneController.instant.playing) {
-				if (ScanSceneController.instant.state == ScanSceneState.AnimationAfterName) {
-					ScanSceneController.instant.guanyinContainer.transform.SetParent(ScanSceneController.instant.cameraObjectContainer.transform, false);
-				}
+				//if (ScanSceneController.instant.state == ScanSceneState.AnimationAfterName) {
+				ScanSceneController.instant.guanyinContainer.transform.SetParent(ScanSceneController.instant.cameraObjectContainer.transform, false);
+				//}
 				return;
 			}
 			for (int i = 0; i < transform.childCount; i++) {
