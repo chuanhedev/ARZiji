@@ -346,7 +346,7 @@ namespace Guanyin
 
 		public void Qifu2Clicked ()
 		{
-			UpdateState (ScanSceneState.FuShown);
+			//UpdateState (ScanSceneState.FuShown);
 		}
 
 		private void GetRandomFu ()
